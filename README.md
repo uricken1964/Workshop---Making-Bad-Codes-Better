@@ -6,17 +6,17 @@ The last version of the demo database can be downloaded here:
 
 **https://www.db-berater.de/downloads/ERP_DEMO_2012.BAK**
 
-Written by Uwe Ricken, db Berater GmbH
+> Written by Uwe Ricken, db Berater GmbH
+> 
+> All scripts are intended only as a supplement to demos and lectures
+> given by Uwe Ricken.  
+>   
+> THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF 
+> ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED 
+> TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+> PARTICULAR PURPOSE.
 
-This script is intended only as a supplement to demos and lectures
-given by Uwe Ricken.  
-  
-THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF 
-ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED 
-TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-PARTICULAR PURPOSE.
-
-++Note++
+**Note**
 The database contains a framework for all workshops / sessions from db Berater GmbH
 + Stored Procedures
 + User Definied Inline Functions
