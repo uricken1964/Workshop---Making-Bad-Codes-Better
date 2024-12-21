@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Workshop---Making-Bad-Codes-Better/FileContentIndex/1cd52493-ca40-4804-87e6-676d13caaa8f.vsidx
+/.vs/Workshop---Making-Bad-Codes-Better/FileContentIndex/9a541b81-1ecb-4b99-b53e-e3ce2a88c0c4.vsidx
+/.vs/Workshop---Making-Bad-Codes-Better/FileContentIndex/b048188d-62af-4a06-bc81-8a6215b6e512.vsidx
+/.vs/Workshop---Making-Bad-Codes-Better/FileContentIndex/c26b67e7-fc2c-445d-8ce2-6e8f7256e7fd.vsidx
+*.vsidx
