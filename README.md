@@ -7,3 +7,19 @@ The last version of the demo database can be downloaded here:
 **https://www.db-berater.de/downloads/ERP_DEMO_2012.BAK**
 
 Workshop Scripts for SQL Server Workshop "Making Bad Codes Better"
+
+# Scenario 01
+
+# Scenario 02
+
+# Scenario 03
+
+# Scenario 04
+
+# Scenario 05
+
+# Scenario 06
+
+# Scenario 07
+
+# Scenario 08
