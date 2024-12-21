@@ -9,6 +9,15 @@ The last version of the demo database can be downloaded here:
 Workshop Scripts for SQL Server Workshop "Making Bad Codes Better"
 
 # Scenario 01
+The development team love to work with user definied functions (UDF).
+So they decided to create an UDF which calculates the status of any customer by year.
+The calculation is a simple math:
+
++ A customer: More or equal than 20 orders in a given year
++ B customer: 10 - 19 orders for a given year
++ C customer: 05 - 09 orders for a given year
++ D customer: 01 - 04 orders for a given year
++ Z customer: no orders for a given year
 
 # Scenario 02
 
