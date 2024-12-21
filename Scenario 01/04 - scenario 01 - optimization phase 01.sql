@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0044 - scenario 01 - optimization phase 01.sql
+	File:		04 - scenario 01 - optimization phase 01.sql
 
 	Summary:	Within the first optimization we avoid double writing to the
 				table variable. Before we write into the table variable we

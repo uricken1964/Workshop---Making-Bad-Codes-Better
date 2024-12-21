@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0046 - scenario 01 - optimization phase 03.sql
+	File:		06 - scenario 01 - optimization phase 03.sql
 
 	Summary:	This script optimize the table valued function that way
 				that we make a multi line function a inline function

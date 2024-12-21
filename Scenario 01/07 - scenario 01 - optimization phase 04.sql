@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0047 - scenario 01 - optimization phase 04.sql
+	File:		07 - scenario 01 - optimization phase 04.sql
 
 	Summary:	The deletion process covers lots of indexes.
 				It is important to check how the indexes get used.

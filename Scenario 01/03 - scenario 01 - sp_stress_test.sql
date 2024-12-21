@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0043 - scenario 01 - sp_stress_test.sql
+	File:		03 - scenario 01 - sp_stress_test.sql
 
 	Summary:	This script creates a stored procedure which should be run by
 				- ostress OR

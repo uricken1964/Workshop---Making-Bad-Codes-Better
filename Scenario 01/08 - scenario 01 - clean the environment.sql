@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0048 - scenario 01 - clean the environment.sql
+	File:		08 - scenario 01 - clean the environment.sql
 
 	Summary:	This script removes all custom objects from the database which 
 				have been used for the demos!

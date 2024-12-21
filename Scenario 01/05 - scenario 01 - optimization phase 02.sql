@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0045 - scenario 01 - optimization phase 02.sql
+	File:		05 - scenario 01 - optimization phase 02.sql
 
 	Summary:	This scripts takes the second phase for optimization inside
 				the bad written function dbo.calculate_customer_category
