@@ -28,7 +28,10 @@ Workshop Scripts for SQL Server Workshop "Making Bad Codes Better"
 # Folder structure
 + Each scenario is stored in a separate folder (e.g. Scenario 01 in Folder Scenario 01)
 + All scripts have numbers and basically the script with the prefix 01 is for the preparation of the environment
-+ The folder ++ Windows Admin Center ++ contains json files with the configuration of performance counter. These files can only be used with Windows Admin Center
++ The folder **Windows Admin Center** contains json files with the configuration of performance counter. These files can only be used with Windows Admin Center
+  - [Windows Admin Center](https://www.microsoft.com/en-us/windows-server/windows-admin-center)
++ The folder **SQL Query Stress** contains prepared configuration settings for each scenario which produce load test with SQLQueryStress from Adam Machanic
+  - [SQLQueryStress](https://github.com/ErikEJ/SqlQueryStress)
 
 # Scenario 01
 The development team love to work with user definied functions (UDF).
