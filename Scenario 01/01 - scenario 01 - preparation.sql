@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0041 - scenario 01 - preparation.sql
+	File:		01 - scenario 01 - preparation.sql
 
 	Summary:	This script prepares tables in the database ERP_Demo
 				for the chapter

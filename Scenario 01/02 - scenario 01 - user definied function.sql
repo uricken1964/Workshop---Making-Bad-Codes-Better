@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		0042 - scenario 01 - user definied function.sql
+	File:		02 - scenario 01 - user definied function.sql
 
 	Summary:	The developer created a user definied function for the calculation
 				of the status of a customer. This script shows the ORIGINAL function
