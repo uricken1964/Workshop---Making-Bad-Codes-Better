@@ -36,8 +36,6 @@ GO
 	Description:	This user definied function calculates the number of
 					orders a customer has placed for a specific year
 */
-DROP FUNCTION IF EXISTS dbo.calculate_customer_category;
-GO
 CREATE OR ALTER FUNCTION dbo.calculate_customer_category
 (
 	@c_custkey		BIGINT,

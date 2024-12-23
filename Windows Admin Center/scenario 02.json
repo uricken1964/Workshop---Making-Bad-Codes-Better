@@ -36,6 +36,13 @@
                 "Lesevorgänge/s"
             ],
             "type": "Line"
+        },
+        {
+            "object": "System",
+            "counters": [
+                "Processor Queue Length"
+            ],
+            "type": "Line"
         }
     
 }

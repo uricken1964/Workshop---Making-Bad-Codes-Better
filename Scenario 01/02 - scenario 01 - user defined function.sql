@@ -11,7 +11,7 @@
 				| c_custkey | num_of_orders | classification |
 				
 				THIS SCRIPT IS PART OF THE WORKSHOP:
-					"Performance optimization by identifying and correcting bad SQL code"
+					"Workshop - Making Bad Codes better"
 
 	Date:		October 2024
 	Revion:		November 2024
@@ -110,60 +110,4 @@ BEGIN
 
 	RETURN;
 END
-GO
-
-/* Test of user definied function with different customers */
-SELECT	c.c_custkey,
-        c.c_mktsegment,
-        c.c_nationkey,
-        c.c_name,
-		ccc.num_of_orders,
-		ccc.classification
-FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
-WHERE	c.c_custkey = 1483396;	/* A-customer */
-GO
-
-SELECT	c.c_custkey,
-        c.c_mktsegment,
-        c.c_nationkey,
-        c.c_name,
-		ccc.num_of_orders,
-		ccc.classification
-FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
-WHERE	c.c_custkey = 746111;		/* B-customer */
-GO
-
-SELECT	c.c_custkey,
-        c.c_mktsegment,
-        c.c_nationkey,
-        c.c_name,
-		ccc.num_of_orders,
-		ccc.classification
-FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
-WHERE	c.c_custkey = 149134;		/* C-customer */
-GO
-
-SELECT	c.c_custkey,
-        c.c_mktsegment,
-        c.c_nationkey,
-        c.c_name,
-		ccc.num_of_orders,
-		ccc.classification
-FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
-WHERE	c.c_custkey = 696764;		/* D-customer */
-GO
-
-SELECT	c.c_custkey,
-        c.c_mktsegment,
-        c.c_nationkey,
-        c.c_name,
-		ccc.num_of_orders,
-		ccc.classification
-FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
-WHERE	c.c_custkey = 10;		/* Z-customer */
 GO

@@ -2,6 +2,18 @@
 	============================================================================
 	File:		01 - scenario 01 - preparation.sql
 
+	Problemdescription:
+
+	The development team love to work with user definied functions (UDF).
+	So they decided to create an UDF which calculates the status of any customer by year.
+	The calculation is a simple math:
+
+	+ A customer: More or equal than 20 orders in a given year
+	+ B customer: 10 - 19 orders for a given year
+	+ C customer: 05 - 09 orders for a given year
+	+ D customer: 01 - 04 orders for a given year
+	+ Z customer: no orders for a given year
+
 	Summary:	This script prepares tables in the database ERP_Demo
 				for the chapter
 				- bad code - usage of functions
@@ -47,4 +59,10 @@ GO
 EXEC dbo.sp_create_foreignkeys
 	@master_table = 'dbo.customers',
     @detail_table = N'dbo.orders';
+GO
+
+/*
+	We are making sure that Query Store is activated!
+*/
+EXEC dbo.sp_activate_query_store;
 GO

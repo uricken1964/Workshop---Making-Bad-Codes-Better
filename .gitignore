@@ -4,4 +4,4 @@
 
 *.vsidx
 *.wsuo
-*.sqllite
+*.sqlite

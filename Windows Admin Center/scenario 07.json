@@ -37,6 +37,13 @@
                 "Page latch waits"
             ,
             "type": "Line"
+        },
+        {
+            "object": "System",
+            "counters": [
+                "Processor Queue Length"
+            ],
+            "type": "Line"
         }
     
 }
