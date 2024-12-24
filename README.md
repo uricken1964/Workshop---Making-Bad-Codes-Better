@@ -45,6 +45,10 @@ The calculation is a simple math:
 + Z customer: no orders for a given year
 
 # Scenario 02
+A software uses a table to queue jobs. Whenever a new job is to be started, its details are written to this table. The table grows very quickly, as up to 100,000 jobs can be scheduled in an hour.
+For this reason, a background job runs to clean up the job_queue table.
+As a rule, more jobs are queued at a high rate than are processed. For this reason, the software manufacturer has decided to parameterize the process.
+The first parameter specifies how many jobs that have already been executed should be deleted. The second parameter specifies the batch size, which determines how many records should be deleted from the table at the same time.
 
 # Scenario 03
 
