@@ -1,9 +1,13 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Preparation and Documents",
-    "\\Tools - Examples"
+    "\\Performance Tools - Examples",
+    "\\Scenario 01",
+    "\\Scenario 02",
+    "\\SQL ostress",
+    "\\SQL Query Stress",
+    "\\Windows Admin Center"
   ],
-  "SelectedNode": "\\Tools - Examples\\0001 - demo of Query Store.sql",
+  "SelectedNode": "\\Scenario 01\\01 - scenario 01 - preparation.sql",
   "PreviewInSolutionExplorer": false
 }

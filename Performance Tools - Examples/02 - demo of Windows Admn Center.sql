@@ -55,7 +55,7 @@ BEGIN
 	SET NOCOUNT ON;
 	SET XACT_ABORT ON;
 
-	DECLARE	@c_custkey BIGINT = CAST((RAND() * 16000000) + 1 AS BIGINT);
+	DECLARE	@c_custkey BIGINT = CAST((RAND() * 1600000) + 1 AS BIGINT);
 	/*
 		Get a record for the given customer which contains
 		the number of orders and the information of:

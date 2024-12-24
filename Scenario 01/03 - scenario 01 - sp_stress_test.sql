@@ -46,7 +46,7 @@ BEGIN
 			ccc.num_of_orders,
 			ccc.classification
 	FROM	dbo.customers AS c
-			CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
+			CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019, 0) AS ccc
 	WHERE	c.c_custkey = @c_custkey;
 END
 GO

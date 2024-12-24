@@ -32,9 +32,9 @@ DROP FUNCTION IF EXISTS dbo.calculate_customer_category;
 GO
 
 /* Remove all indexes */
-EXEC dbo.sp_drop_foreignkeys @table_name = N'ALL';
+EXEC dbo.sp_drop_foreign_keys @table_name = N'ALL';
 
-EXEC dbo.sp_drop_indexes @table_name = N'dbo.orders', @check_only = 0;
-EXEC dbo.sp_drop_indexes @table_name = N'dbo.customers', @check_only = 0;
-EXEC dbo.sp_drop_indexes @table_name = N'dbo.nations', @check_only = 0;
+EXEC dbo.sp_drop_indexes @table_name = N'dbo.orders',		@check_only = 0;
+EXEC dbo.sp_drop_indexes @table_name = N'dbo.customers',	@check_only = 0;
+EXEC dbo.sp_drop_indexes @table_name = N'dbo.nations',		@check_only = 0;
 GO

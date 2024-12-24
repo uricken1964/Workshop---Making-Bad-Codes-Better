@@ -36,6 +36,7 @@ GO
 	Function Name:	dbo.calculate_customer_category
 	Parameters:		@c_custkey		=>	customer key from dbo.customers
 					@int_orderyear	=>	year of the status earned
+					@calling_level	=>	the function is called recursive!
 
 	Description:	This user definied function calculates the number of
 					orders a customer has placed for a specific year
@@ -43,7 +44,8 @@ GO
 CREATE OR ALTER FUNCTION dbo.calculate_customer_category
 (
 	@c_custkey		BIGINT,
-	@int_orderyear	INT
+	@int_orderyear	INT,
+	@calling_level	INT = 0
 )
 RETURNS @t TABLE
 (
@@ -57,7 +59,8 @@ BEGIN
 		if the customer does not have any orders in the specific year
 		we return the value "Z"
 	*/
-	DECLARE	@num_of_orders	INT;
+	DECLARE	@num_of_orders				INT;
+	DECLARE	@previous_classification	CHAR(1);
 
 	/* Insert the c_custkey into the table variable */
 	INSERT INTO @t (c_custkey) VALUES (@c_custkey);
@@ -73,9 +76,32 @@ BEGIN
 	SET		num_of_orders = @num_of_orders
 	WHERE	c_custkey = @c_custkey;
 
-	/* Depending on the number of orders we define what category the customer is */
+	/*
+		Depending on the number of orders we define what category the customer is
+		If the category for the given year is "Z" we take the classification from
+		the last year and reduce it by one classification
+	*/
 	IF @num_of_orders = 0
+	BEGIN
+		IF @calling_level = 0
+		BEGIN
+			DELETE	@t;
+
+			INSERT INTO @t
+			(c_custkey, num_of_orders, classification)
+			SELECT	c_custkey, @num_of_orders, classification
+			FROM	dbo.calculate_customer_category(@c_custkey, @int_orderyear - 1, @calling_level + 1);
+
+			UPDATE	@t
+			SET		classification = CASE WHEN classification = N'D'
+										  THEN 'Z'
+										  ELSE CHAR(ASCII(classification) + 1)
+									 END
+			WHERE	c_custkey = @c_custkey
+					AND classification <> 'Z'
+		END
 		RETURN;
+	END
 
 	IF @num_of_orders >= 20
 	BEGIN

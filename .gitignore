@@ -5,3 +5,4 @@
 *.vsidx
 *.wsuo
 *.sqlite
+DocumentLayout*.json

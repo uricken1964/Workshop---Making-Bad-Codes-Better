@@ -98,6 +98,7 @@ GO
 
 /*
 	Now open SQLQueryStress and load the settings of 001 - demo of Query Store.json
+	Start the process the first time and watch the metrics.
 */
 
 /*

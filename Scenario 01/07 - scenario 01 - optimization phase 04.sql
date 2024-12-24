@@ -2,9 +2,9 @@
 	============================================================================
 	File:		07 - scenario 01 - optimization phase 04.sql
 
-	Summary:	The deletion process covers lots of indexes.
-				It is important to check how the indexes get used.
-				It might be useful to delete unnecessary indexes!
+	Summary:	This script optimize the table valued function that way
+				that we make the Multiline-Function an Inline-Function for
+				a better execution plan.
 				
 				THIS SCRIPT IS PART OF THE WORKSHOP:
 					"Performance optimization by identifying and correcting bad SQL code"
@@ -29,74 +29,61 @@ USE ERP_Demo;
 GO
 
 /*
-	Let's check the indexes in the table dbo.jobqueue!
+	Function Name:	dbo.calculate_customer_category
+	Parameters:		@c_custkey		=>	customer key from dbo.customers
+					@int_orderyear	=>	year of the status earned
+					@calling_level	=>	the function is called recursive!
+
+	Description:	This user definied function calculates the number of
+					orders a customer has placed for a specific year
 */
-SELECT	i.index_id,
-		i.name,
-		i.type_desc,
-		i.is_unique,
-		i.is_primary_key,
-		i.is_unique_constraint,
-        ddius.user_seeks,
-        ddius.user_scans,
-        ddius.user_lookups,
-        ddius.user_updates,
-        ddius.last_user_seek,
-        ddius.last_user_scan,
-        ddius.last_user_lookup,
-        ddius.last_user_update
-FROM	sys.indexes AS i
-		INNER JOIN sys.dm_db_index_usage_stats AS ddius
-		ON	(
-				i.index_id = ddius.index_id
-				AND i.object_id = ddius.object_id
-			)
-WHERE	ddius.database_id = DB_ID()
-		AND i.object_id = OBJECT_ID(N'dbo.jobqueue', N'U')
-ORDER BY
-		i.index_id ASC;
+DROP FUNCTION IF EXISTS dbo.calculate_customer_category;
 GO
 
-/*
-	Let's remove indexes which are not used in the table.
-
-	NOTE:	this is only for demo purposes and fits to this specific scenario
-			Don't delete vendor indexes without permissions
-			Do not rely on these statistics only but check Query Store or your
-			Execution plans whether other indexes on the table are used!!!
-*/
-DROP INDEX nix_jobqueue_sortorder	ON dbo.jobqueue;
-DROP INDEX nix_jobqueue_genprocid	ON dbo.jobqueue;
-DROP INDEX nix_jobqueue_uid_task	ON dbo.jobqueue;
-DROP INDEX nix_jobqueue_objectname	ON dbo.jobqueue;
-DROP INDEX ccc_jobqueue_sr02506778	ON dbo.jobqueue;
-GO
-
-/*
-	Let's check the indexes in the table dbo.jobqueue!
-*/
-SELECT	i.index_id,
-		i.name,
-		i.type_desc,
-		i.is_unique,
-		i.is_primary_key,
-		i.is_unique_constraint,
-        ddius.user_seeks,
-        ddius.user_scans,
-        ddius.user_lookups,
-        ddius.user_updates,
-        ddius.last_user_seek,
-        ddius.last_user_scan,
-        ddius.last_user_lookup,
-        ddius.last_user_update
-FROM	sys.indexes AS i
-		INNER JOIN sys.dm_db_index_usage_stats AS ddius
-		ON	(
-				i.index_id = ddius.index_id
-				AND i.object_id = ddius.object_id
-			)
-WHERE	ddius.database_id = DB_ID()
-		AND i.object_id = OBJECT_ID(N'dbo.jobqueue', N'U')
-ORDER BY
-		i.index_id ASC;
+CREATE OR ALTER FUNCTION dbo.calculate_customer_category
+(
+	@c_custkey		BIGINT,
+	@int_orderyear	INT,
+	@calling_level	INT = 0
+)
+RETURNS TABLE
+AS
+RETURN
+(
+	/* Return the  information from actual and previous year */
+	WITH l
+	AS
+	(
+		SELECT	ROW_NUMBER() OVER (ORDER BY YEAR(o_orderdate) DESC)	AS	rn,
+				o.o_custkey			AS	c_custkey,
+				COUNT_BIG(*)		AS	num_of_orders,
+				CASE WHEN YEAR(o_orderdate) = @int_orderyear
+					 THEN CASE
+							WHEN COUNT_BIG(*) >= 20	THEN 'A'
+							WHEN COUNT_BIG(*) >= 10	THEN 'B'
+							WHEN COUNT_BIG(*) >= 5	THEN 'C'
+							WHEN COUNT_BIG(*) >= 1	THEN 'D'
+							ELSE 'Z'
+						  END
+					 ELSE CASE
+							WHEN COUNT_BIG(*) >= 20	THEN 'B'
+							WHEN COUNT_BIG(*) >= 10	THEN 'C'
+							WHEN COUNT_BIG(*) >= 5	THEN 'D'
+							ELSE 'Z'
+						  END
+				END			AS	classification
+		FROM	dbo.orders AS o
+		WHERE	o.o_custkey = @c_custkey
+				AND	o.o_orderdate >= DATEFROMPARTS(@int_orderyear - 1, 1, 1)
+				AND	o.o_orderdate <= DATEFROMPARTS(@int_orderyear, 12, 31)
+		GROUP BY
+				o.o_custkey,
+				YEAR(o_orderdate)
+	)
+	SELECT	c_custkey,
+			num_of_orders,
+			classification
+	FROM	l
+	WHERE	rn = 1
+);
 GO
