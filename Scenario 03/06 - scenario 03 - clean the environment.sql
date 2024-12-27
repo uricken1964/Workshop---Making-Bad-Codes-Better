@@ -31,5 +31,11 @@ DROP TABLE IF EXISTS dbo.sapusers;
 DROP TABLE IF EXISTS dbo.persons;
 GO
 
+DROP PROCEDURE IF EXISTS dbo.stress_query;
+GO
+
 EXEC dbo.sp_drop_indexes @table_name = N'dbo.customers',
                          @check_only = 0;
+GO
+
+ALTER DATABASE ERP_Demo SET QUERY_STORE CLEAR;

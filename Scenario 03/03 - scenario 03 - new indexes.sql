@@ -1,6 +1,6 @@
 /*
 	============================================================================
-	File:		02 - scenario 03 - proc stress_test_03 - original.sql
+	File:		02 - scenario 03 - new indexes.sql
 
 	Summary:	This script creates the original query which should be fired
 				10.000 times in a minute!
@@ -26,52 +26,32 @@
 	PARTICULAR PURPOSE.
 	============================================================================
 */
-/* This setting is for statisticsparser only! */
-SET LANGUAGE us_english;
-GO
-
 USE ERP_Demo;
 GO
 
+/*
+	The JOIN Operation is on centralsapaccount and on ccc_aliasname!
+	What could be more obvious than indexing these two attributes?
+*/
+IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'dbo.persons') AND name = N'nix_persons_centralsapaccount')
+	DROP INDEX nix_persons_centralsapaccount ON dbo.persons;
+	GO
 
-CREATE OR ALTER PROCEDURE dbo.stress_query
-	@uid_sapuser	VARCHAR(38)
-AS
-BEGIN
-	SET NOCOUNT ON;
+IF EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'dbo.persons') AND name = N'nix_persons_ccc_aliasname')
+	DROP INDEX nix_persons_ccc_aliasname ON dbo.persons;
+	GO
 
-	SELECT	internalname,
-			uid_person,
-			centralaccount,
-			xmarkedfordeletion
-	FROM	dbo.persons
-	WHERE	(
-				uid_person IN
-				(
-					SELECT	p.uid_person
-					FROM	(
-								SELECT	a.accnt AS c1,
-										a.accnt AS c2
-								FROM	dbo.sapusers AS a
-								WHERE	uid_sapuser = @uid_sapuser
-							) AS x
-							INNER JOIN dbo.persons AS p
-							ON
-							(
-								p.CentralSAPAccount = x.c1
-								OR p.CCC_AliasName = x.c2
-							)
-				)
-			)
-	ORDER BY
-		   internalname,
-		   centralaccount;
-END
+CREATE NONCLUSTERED INDEX nix_persons_centralsapaccount
+ON dbo.persons (centralsapaccount)
+WITH (DATA_COMPRESSION = PAGE);
 GO
 
-/*
-	Activate the runtime execution plan before you execute the procedure!
-*/
+CREATE NONCLUSTERED INDEX nix_persons_ccc_aliasname
+ON dbo.persons (ccc_aliasname)
+WITH (DATA_COMPRESSION = PAGE);
+GO
+
+/* We check it out! */
 SET STATISTICS IO, TIME ON;
 GO
 
@@ -83,5 +63,3 @@ GO
 
 SET STATISTICS IO, TIME OFF;
 GO
-
-ALTER DATABASE ERP_demo SET QUERY_STORE CLEAR;

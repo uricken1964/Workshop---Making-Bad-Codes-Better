@@ -27,6 +27,10 @@
 	PARTICULAR PURPOSE.
 	============================================================================
 */
+SET NOCOUNT ON;
+SET XACT_ABORT ON;
+GO
+
 USE ERP_Demo;
 GO
 
@@ -43,49 +47,19 @@ CREATE TABLE dbo.persons
 	xmarkedfordeletion			INT				NULL,
 	centralsapaccount			NVARCHAR(12)	NULL,
 	ccc_aliasname				NVARCHAR(256)	NULL,
-	c1_filler					CHAR(3500)		NOT NULL	DEFAULT ('shit')
-
-	CONSTRAINT pk_person PRIMARY KEY CLUSTERED (uid_person)
-	WITH
-	(
-		FILLFACTOR = 80,
-		DATA_COMPRESSION = PAGE
-	)
+	c1_filler					CHAR(512)		NOT NULL	DEFAULT ('shit')
 );
 GO
 
-CREATE NONCLUSTERED INDEX nix_person_centralsapaccount
-ON dbo.Persons
-(centralsapaccount)
-WITH (DATA_COMPRESSION = PAGE);
-GO
-
-RAISERROR ('Creating table [dbo].[sapusers]...', 0, 1) WITH NOWAIT;
-CREATE TABLE dbo.sapusers
-(
-	uid_sapuser	VARCHAR(38) NOT NULL,
-	uid_person	VARCHAR(38)	NULL,
-	accnt		NVARCHAR(32) NULL,
-	c1_filler	NCHAR(3500)	NOT NULL DEFAULT (N'test')
-
-	CONSTRAINT pk_sapusers PRIMARY KEY CLUSTERED (uid_sapuser)
-	WITH (DATA_COMPRESSION = PAGE)
-);
-GO
-
-ALTER TABLE dbo.sapusers ADD  CONSTRAINT fk_persons FOREIGN KEY
-(uid_person) REFERENCES dbo.persons (uid_person)
-GO
-
-RAISERROR ('filling table [dbo].[persons] with 1.6 Mio rows...', 0, 1) WITH NOWAIT;
+RAISERROR ('filling table [dbo].[persons] with 1.607.958 rows...', 0, 1) WITH NOWAIT;
 INSERT INTO dbo.persons WITH (TABLOCK)
 (uid_person, internalname, centralaccount, xmarkedfordeletion, centralsapaccount, ccc_aliasname)
-SELECT	CAST('00002332-5324-4b66-afe7-ea2024c9cd9a' AS UNIQUEIDENTIFIER)	AS	uid_person,
-		N'URicken'	AS	internalname,
-		N'QM2Q177'	AS	centralaccount,
-		0			AS	xmarkedfordeletion,
-		N'QM2Q177'	AS	centralsapaccount,
-		NULL		AS	ccc_aliasname
+SELECT	'00002332-5324-4b66-afe7-ea2024c9cd9a'	AS	uid_person,
+		N'uricken'								AS	internalname,
+		N'QM2Q177'								AS	centralaccount,
+		0										AS	xmarkedfordeletion,
+		N'QM2Q177'								AS	centralsapaccount,
+		NULL									AS	ccc_aliasname
 
 UNION ALL
 
@@ -98,13 +72,28 @@ SELECT	NEWID()							AS	uid_person,
 FROM	dbo.customers;
 GO
 
+RAISERROR ('creating primary key and non clustered indexe(s) on [dbo].[persons]...', 0, 1) WITH NOWAIT;
+ALTER TABLE dbo.persons
+ADD CONSTRAINT pk_persons PRIMARY KEY CLUSTERED (uid_person);
+GO
 
-RAISERROR ('filling table [dbo].[sapusers] with 6.6 Mio rows...', 0, 1) WITH NOWAIT;
+
+RAISERROR ('Creating table [dbo].[sapusers]...', 0, 1) WITH NOWAIT;
+CREATE TABLE dbo.sapusers
+(
+	uid_sapuser	VARCHAR(38)		NOT NULL,
+	uid_person	VARCHAR(38)		NULL,
+	accnt		NVARCHAR(38)	NULL,
+	c1_filler	NCHAR(1024)		NOT NULL DEFAULT (N'test')
+);
+GO
+
+RAISERROR ('filling table [dbo].[sapusers] with 6.607.958 Mio rows...', 0, 1) WITH NOWAIT;
 INSERT INTO dbo.sapusers WITH (TABLOCK)
 (uid_sapuser, uid_person, accnt)
-SELECT	NEWID()		AS	uid_sapuser,
+SELECT	CAST(NEWID() AS VARCHAR(38))	AS	uid_sapuser,
 		p.uid_person,
-		NULL
+		p.uid_person
 FROM	dbo.persons AS p
 GO
 
@@ -115,4 +104,18 @@ SELECT	TOP (5000000)
 		NULL,
 		NULL
 FROM	dbo.orders;
+GO
+
+RAISERROR ('updating a few rows in [dbo].[sapusers]...', 0, 1) WITH NOWAIT;
+UPDATE	s WITH (TABLOCKX)
+SET		s.accnt = p.centralsapaccount
+		FROM dbo.persons AS p
+		INNER JOIN dbo.sapusers AS s
+		ON (p.uid_person = s.uid_person)
+GO
+
+RAISERROR ('creating primary key on [dbo].[sapusers]...', 0, 1) WITH NOWAIT;
+ALTER TABLE dbo.sapusers
+ADD CONSTRAINT pk_sapuser_uid_sapuser PRIMARY KEY CLUSTERED (uid_sapuser)
+WITH (DATA_COMPRESSION = PAGE);
 GO

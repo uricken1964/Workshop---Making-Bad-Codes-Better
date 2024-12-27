@@ -1,9 +1,9 @@
 /*
 	============================================================================
-	File:		04 - scenario 03 - proc stress_test_03 - version 02.sql
+	File:		04 - scenario 03 - stress query - optimization 01.sql
 
-	Summary:	After we implemented the fix from the vendor we had the same
-				issue as before. So we must change the query by ourself!
+	Summary:	This script creates the original query which should be fired
+				10.000 times in a minute!
 				
 				Use https://statisticsparser.com to analyze the usage of resources!
 
@@ -33,7 +33,7 @@ GO
 USE ERP_Demo;
 GO
 
-CREATE OR ALTER PROCEDURE dbo.stress_test_03
+CREATE OR ALTER PROCEDURE dbo.stress_query
 	@uid_sapuser	VARCHAR(38)
 AS
 BEGIN
@@ -51,16 +51,10 @@ BEGIN
 					FROM	dbo.persons AS p
 							INNER JOIN dbo.sapusers AS a
 							ON
-							(p.CentralSAPAccount = a.accnt)
-					WHERE	a.uid_sapuser = @uid_sapuser
-
-					UNION ALL
-
-					SELECT	p.uid_person
-					FROM	dbo.persons AS p
-							INNER JOIN dbo.sapusers AS a
-							ON
-							(p.CCC_AliasName = a.accnt)
+							(
+								p.CentralSAPAccount = a.accnt
+								OR p.CCC_AliasName = a.accnt
+							)
 					WHERE	a.uid_sapuser = @uid_sapuser
 				)
 			)
@@ -68,4 +62,17 @@ BEGIN
 		   internalname,
 		   centralaccount;
 END
+GO
+
+/* We check it out! */
+SET STATISTICS IO, TIME ON;
+GO
+
+/* Get the uid_sapuser first for the execution of the stored procedure */
+DECLARE @uid_sapuser VARCHAR(38) = (SELECT uid_sapuser FROM dbo.sapusers WHERE uid_person = '00002332-5324-4B66-AFE7-EA2024C9CD9A');
+
+EXEC dbo.stress_query @uid_sapuser = @uid_sapuser;
+GO
+
+SET STATISTICS IO, TIME OFF;
 GO
