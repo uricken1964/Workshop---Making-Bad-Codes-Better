@@ -32,6 +32,8 @@ GO
 
 /* repopulate the 5 million rows again! */
 DROP TABLE IF EXISTS dbo.jobqueue;
+DROP TABLE IF EXISTS dbo.used_partition;
+DROP TABLE IF EXISTS dbo.session_values;
 GO
 
 CREATE TABLE dbo.jobqueue
@@ -81,6 +83,14 @@ CREATE TABLE dbo.used_partition
 );
 GO
 
+IF EXISTS (SELECT * FROM sys.partition_schemes WHERE name = N'ps_session_divisor')
+	DROP PARTITION SCHEME ps_session_divisor;
+	GO
+
+IF EXISTS (SELECT * FROM sys.partition_functions WHERE name = N'pf_session_divisor')
+	DROP PARTITION FUNCTION pf_session_divisor;
+	GO
+
 CREATE PARTITION FUNCTION pf_session_divisor (SMALLINT)
 AS RANGE LEFT
 FOR VALUES(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -88,7 +98,7 @@ GO
 
 CREATE PARTITION SCHEME ps_session_divisor
 AS PARTITION pf_session_divisor
-ALL TO (PRIMARY);
+ALL TO ([PRIMARY]);
 GO
 
 CREATE TABLE dbo.session_values
@@ -119,7 +129,7 @@ BEGIN
 	DECLARE	@partition_key			INT;
 
 	DECLARE	@rows_deleted_actual	INT = 1;
-	DECLARE @AnzahlLoeschGesamt		INT = 0;
+	DECLARE @rows_deleted_total		INT = 0;
 
 	DECLARE	@error_message		NVARCHAR(2024);
 	DECLARE	@error_number		INT;
@@ -169,7 +179,7 @@ BEGIN
 		FROM	dbo.used_partition AS up
 				CROSS JOIN
 				(
-					SELECT TOP (@maxlimit)
+					SELECT	TOP (@maxlimit)
 							uid_jobqueue
 					FROM	dbo.jobqueue WITH (READPAST)
 					WHERE	generation = -1
@@ -193,7 +203,7 @@ BEGIN
 			The @rows_total is only for checking IF data are available
 			in the table.
 		*/
-		WHILE (@rows_deleted_actual) > 0 AND @AnzahlLoeschGesamt < @maxlimit
+		WHILE (@rows_deleted_actual) > 0 AND @rows_deleted_total < @maxlimit
 		BEGIN
 			DELETE	TOP (@rowlimit)
 					jq
@@ -203,10 +213,10 @@ BEGIN
 			WHERE	$PARTITION.pf_session_divisor(sv.partition_key) = @partition_key;
 
 			SET	@rows_deleted_actual = @@ROWCOUNT;
-			SET	@AnzahlLoeschGesamt += @rows_deleted_actual;
+			SET	@rows_deleted_total += @rows_deleted_actual;
 
-			IF (@maxlimit - @AnzahlLoeschGesamt) < @rowlimit
-				SET	@rowlimit =  (@maxlimit - @AnzahlLoeschGesamt);
+			IF (@maxlimit - @rows_deleted_total) < @rowlimit
+				SET	@rowlimit =  (@maxlimit - @rows_deleted_total);
 		END
 	END TRY
 	BEGIN CATCH
@@ -223,6 +233,6 @@ BEGIN
 	DELETE	dbo.used_partition
 	WHERE	session_uid = @session_uid;
 
-	RETURN @AnzahlLoeschGesamt;
+	RETURN @rows_deleted_total;
 END
 GO

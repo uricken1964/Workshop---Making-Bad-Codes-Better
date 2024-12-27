@@ -36,7 +36,6 @@
 	============================================================================
 */
 
-/* The database is running with READ COMMITTED SNAPSHOT ISOLATION */
 USE ERP_Demo;
 GO
 

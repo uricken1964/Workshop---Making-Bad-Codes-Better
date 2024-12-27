@@ -45,13 +45,13 @@ BEGIN
 	DECLARE	@itemportion	AS	dbo.helpertable;
 
 	DECLARE @rows_per_batch		INT;
-	DECLARE @LaufDelete			INT = 0;
-	DECLARE @AnzahlLoesch		INT;
-	DECLARE @AnzahlLoeschGesamt	INT = 0;
-	DECLARE @Start				DATETIME;
-	DECLARE @ende				DATETIME;
+	DECLARE @run_delete			INT = 0;
+	DECLARE @num_deletes		INT;
+	DECLARE @num_deletes_total	INT = 0;
+	DECLARE @start_time			DATETIME;
+	DECLARE @end_time			DATETIME;
 	DECLARE @diff				INT;
-	DECLARE @ExpectedRuntime	FLOAT = 1000.0;
+	DECLARE @expected_runtime	FLOAT = 1000.0;
 	DECLARE @rows_total			INT;
 
 	DECLARE	@error_message		NVARCHAR(2024);
@@ -59,20 +59,11 @@ BEGIN
 	DECLARE	@error_line			INT;
 
 BEGIN TRY
-	/*
-		The exact number of rows is not mandatory for the process.
-		The @rows_total is only for checking IF data are available
-		in the table.
-	*/
+	/* Code change for optimization 01 */
 	IF EXISTS (SELECT * FROM dbo.jobqueue)
 		SET	@rows_total = 1
 	ELSE
-		SET @rows_total = 0;
-
-	/* SELECT	@rows_total = COUNT(*) FROM	dbo.jobqueue; */
-
-	IF @rows_total > 0
-		GOTO normal
+		IF @rows_total > 0
 
 	IF @rows_total = 0	AND @@TRANCOUNT = 0
 	BEGIN
@@ -86,19 +77,14 @@ BEGIN TRY
 			SET	@rows_total = 1;
 		END CATCH
 
-		/*
-			Why do we check it again?
-			Why do we truncate an empty table?
-
-			The developer wants to lock the table for further rows!
-		*/
-		IF EXISTS (SELECT * FROM dbo.jobqueue) AND @rows_total = 0
+		/* Step 1: We replace the second count by the previous value */
+		IF (SELECT COUNT(*) FROM dbo.jobqueue) = 0 AND @rows_total = 0
 		BEGIN
 			BEGIN TRY
 				TRUNCATE TABLE dbo.jobqueue;
 				COMMIT;
 				
-				SET	@LaufDelete = 1;
+				SET	@run_delete = 1;
 			END TRY
 			BEGIN CATCH
 				ROLLBACK;
@@ -110,35 +96,36 @@ BEGIN TRY
 		END
 	END
 
-	IF @LaufDelete = 1
+	IF @run_delete = 1
 	BEGIN
 		GOTO endLabel;
 	END
 
 normal:
 	INSERT INTO @Items (singleguid)
-	SELECT TOP (@maxlimit)
+	SELECT	TOP (@maxlimit)
 			qt.uid_jobqueue
 	FROM	dbo.jobqueue AS qt WITH (READPAST)
-	WHERE	Generation = -1;
+	WHERE	generation = -1;
 
-	SET	@LaufDelete = 1;
+	SET	@run_delete = 1;
 	SET	@rows_per_batch = @RowLimit;
 
-	WHILE @LaufDelete > 0
+	WHILE @run_delete > 0
 	BEGIN
-		SET		@Start = GETUTCDATE()
+		SET		@start_time = GETUTCDATE()
 
 		DELETE	@ItemPortion;
-		INSERT INTO @ItemPortion(singleguid)
+
+		INSERT INTO @ItemPortion (singleguid)
 		SELECT TOP (@rows_per_batch)
 				t.singleguid
 		FROM	@Items t
 		WHERE	t.BitProperty = 0;
 
-		SET		@LaufDelete = @@ROWCOUNT;
+		SET		@run_delete = @@ROWCOUNT;
 
-		IF @LaufDelete = 0
+		IF @run_delete = 0
 			CONTINUE;
 
 		UPDATE	@Items
@@ -155,23 +142,23 @@ normal:
 						FROM @ItemPortion t
 					);
 
-			SET		@AnzahlLoesch = @@rowcount;
+			SET		@num_deletes = @@ROWCOUNT;
 		END TRY
 		BEGIN CATCH
-			SELECT	@AnzahlLoesch = 0;
+			SELECT	@num_deletes = 0;
 			WAITFOR DELAY '00:00:05';
 		END CATCH
 
-		SET @AnzahlLoeschGesamt += @AnzahlLoesch;
-		SET	@ende = GETUTCDATE();
-		SET	@diff = DATEDIFF(ms, @start, @ende)
+		SET @num_deletes_total += @num_deletes;
+		SET	@end_time = GETUTCDATE();
+		SET	@diff = DATEDIFF(ms, @start_time, @end_time)
 
 		SELECT @rows_per_batch =
 			CASE
 				WHEN @diff = 0 THEN @RowLimit
-				WHEN @AnzahlLoesch = 0 THEN @RowLimit
-				WHEN @diff > @ExpectedRuntime THEN @RowLimit
-				ELSE CONVERT(INT, @ExpectedRuntime * CONVERT(float, @rows_per_batch) / CONVERT(float, @diff))
+				WHEN @num_deletes = 0 THEN @RowLimit
+				WHEN @diff > @expected_runtime THEN @RowLimit
+				ELSE CONVERT(INT, @expected_runtime * CONVERT(float, @rows_per_batch) / CONVERT(float, @diff))
 			END
 	END
 END TRY
@@ -185,6 +172,6 @@ BEGIN CATCH
 END CATCH
 
 endLabel:
-	RETURN (@AnzahlLoeschGesamt);
+	RETURN (@num_deletes_total);
 END
 GO

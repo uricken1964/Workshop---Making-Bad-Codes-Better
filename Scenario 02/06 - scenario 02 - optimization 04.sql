@@ -73,8 +73,6 @@ IF EXISTS (SELECT * FROM sys.indexes WHERE name = N'nix_jobqueue_uid_task' AND O
 	DROP INDEX nix_jobqueue_uid_task	ON dbo.jobqueue;
 IF EXISTS (SELECT * FROM sys.indexes WHERE name = N'nix_jobqueue_objectname' AND OBJECT_ID = OBJECT_ID(N'dbo.jobqueue', N'U'))
 	DROP INDEX nix_jobqueue_objectname	ON dbo.jobqueue;
-IF EXISTS (SELECT * FROM sys.indexes WHERE name = N'ccc_jobqueue_sr02506778' AND OBJECT_ID = OBJECT_ID(N'dbo.jobqueue', N'U'))
-	DROP INDEX ccc_jobqueue_sr02506778	ON dbo.jobqueue;
 
 /*
 	Let's check the indexes in the table dbo.jobqueue!

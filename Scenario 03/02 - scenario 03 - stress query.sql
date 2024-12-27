@@ -33,7 +33,7 @@ GO
 USE ERP_Demo;
 GO
 
-CREATE OR ALTER PROCEDURE dbo.stress_test_03
+CREATE OR ALTER PROCEDURE dbo.stress_query
 	@uid_sapuser	VARCHAR(38)
 AS
 BEGIN
@@ -67,3 +67,11 @@ BEGIN
 		   centralaccount;
 END
 GO
+
+/*
+	Activate the runtime execution plan before you execute the procedure!
+*/
+SET STATISTICS IO, TIME ON;
+GO
+
+EXEC dbo.stress_query 

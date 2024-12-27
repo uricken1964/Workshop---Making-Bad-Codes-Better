@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS dbo.sapusers;
 DROP TABLE IF EXISTS dbo.persons;
 GO
 
+RAISERROR ('Creating table [dbo].[persons]...', 0, 1) WITH NOWAIT;
 CREATE TABLE dbo.persons
 (
 	uid_person					VARCHAR(38)		NOT NULL,
@@ -59,6 +60,7 @@ ON dbo.Persons
 WITH (DATA_COMPRESSION = PAGE);
 GO
 
+RAISERROR ('Creating table [dbo].[sapusers]...', 0, 1) WITH NOWAIT;
 CREATE TABLE dbo.sapusers
 (
 	uid_sapuser	VARCHAR(38) NOT NULL,
@@ -75,7 +77,7 @@ ALTER TABLE dbo.sapusers ADD  CONSTRAINT fk_persons FOREIGN KEY
 (uid_person) REFERENCES dbo.persons (uid_person)
 GO
 
-
+RAISERROR ('filling table [dbo].[persons] with 1.6 Mio rows...', 0, 1) WITH NOWAIT;
 INSERT INTO dbo.persons WITH (TABLOCK)
 (uid_person, internalname, centralaccount, xmarkedfordeletion, centralsapaccount, ccc_aliasname)
 SELECT	CAST('00002332-5324-4b66-afe7-ea2024c9cd9a' AS UNIQUEIDENTIFIER)	AS	uid_person,
@@ -97,6 +99,7 @@ FROM	dbo.customers;
 GO
 
 
+RAISERROR ('filling table [dbo].[sapusers] with 6.6 Mio rows...', 0, 1) WITH NOWAIT;
 INSERT INTO dbo.sapusers WITH (TABLOCK)
 (uid_sapuser, uid_person, accnt)
 SELECT	NEWID()		AS	uid_sapuser,

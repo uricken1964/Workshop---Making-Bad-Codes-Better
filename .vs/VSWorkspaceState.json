@@ -1,13 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Performance Tools - Examples",
-    "\\Scenario 01",
+    "\\Documents and Preparation",
     "\\Scenario 02",
-    "\\SQL ostress",
+    "\\Scenario 03",
     "\\SQL Query Stress",
     "\\Windows Admin Center"
   ],
-  "SelectedNode": "\\Scenario 01\\01 - scenario 01 - preparation.sql",
+  "SelectedNode": "\\Scenario 03\\02 - scenario 03 - stress query.sql",
   "PreviewInSolutionExplorer": false
 }

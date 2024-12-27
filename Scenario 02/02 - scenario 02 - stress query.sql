@@ -28,9 +28,9 @@ USE ERP_Demo;
 GO
 
 DECLARE	@return_value	INT;
-DECLARE	@start_time		DATETIME2(7) = SYSDATETIME();
 DECLARE	@finish_time	DATETIME2(7);
 DECLARE	@time_diff_ms	INT;
+DECLARE	@start_time		DATETIME2(7) = SYSDATETIME();
 
 EXEC @return_value = dbo.jobqueue_delete
 	@rowlimit = 3000,
@@ -39,7 +39,11 @@ EXEC @return_value = dbo.jobqueue_delete
 SET	@finish_time = SYSDATETIME();
 SET	@time_diff_ms = DATEDIFF(MILLISECOND, @start_time, @finish_time);
 
-/* Update the user counters (monitoring with Windows Admin Manager or PerfMon! */
+/*
+	Update the user counters (monitoring with Windows Admin Manager or PerfMon!
+	User counter 1:	runtime in ms
+	User counter 2:	number of rows deleted
+*/
 dbcc setinstance('SQLServer:User Settable', 'Query', 'User counter 1', @time_diff_ms);
 dbcc setinstance('SQLServer:User Settable', 'Query', 'User counter 2', @return_value);
 
@@ -49,3 +53,6 @@ SELECT	'runtime of process'	AS	action_name,
 		@return_value			AS	num_rows,
 		@start_time				AS	start_time,
 		@finish_time			AS	finish_time;
+GO
+
+SELECT * FROM dbo.runtime_statistics;

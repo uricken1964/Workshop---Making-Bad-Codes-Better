@@ -5,9 +5,9 @@
 	Summary:	This script is the final version of an optimized processing for
 				batch operations in a big table.
 
-				The developer is using SELECT COUNT for checking if records exists.
-				This requires a FULL scan of a given index.
-				Replace it with IF EXISTS!
+				We can completely ignore the work with table objects and run the
+				DELETE within a LOOP and after the deletion we check the number
+				of affected rows!
 
 				THIS SCRIPT IS PART OF THE WORKSHOP:
 					"Performance optimization by identifying and correcting bad SQL code"
@@ -41,7 +41,7 @@ BEGIN
 
 	/* Declaration of variables for the execution */
 	DECLARE	@rows_deleted_actual	INT = 1;
-	DECLARE @AnzahlLoeschGesamt		INT = 0;
+	DECLARE @rows_deleted_total		INT = 0;
 
 	DECLARE	@error_message		NVARCHAR(2024);
 	DECLARE	@error_number		INT;
@@ -53,17 +53,17 @@ BEGIN
 			The @rows_total is only for checking IF data are available
 			in the table.
 		*/
-		WHILE (@rows_deleted_actual) > 0 AND @AnzahlLoeschGesamt < @maxlimit
+		WHILE (@rows_deleted_actual) > 0 AND @rows_deleted_total < @maxlimit
 		BEGIN
 			DELETE	TOP (@rowlimit)
 			FROM	dbo.jobqueue
 			WHERE	Generation = -1;
 
 			SET	@rows_deleted_actual = @@ROWCOUNT;
-			SET	@AnzahlLoeschGesamt += @rows_deleted_actual;
+			SET	@rows_deleted_total += @rows_deleted_actual;
 
-			IF (@maxlimit - @AnzahlLoeschGesamt) < @rowlimit
-				SET	@rowlimit =  (@maxlimit - @AnzahlLoeschGesamt);
+			IF (@maxlimit - @rows_deleted_total) < @rowlimit
+				SET	@rowlimit =  (@maxlimit - @rows_deleted_total);
 		END
 	END TRY
 	BEGIN CATCH
@@ -75,6 +75,6 @@ BEGIN
 				@error_line		AS	error_ine;
 	END CATCH
 
-	RETURN @AnzahlLoeschGesamt;
+	RETURN @rows_deleted_total;
 END
 GO

@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "D:\\OneDrive\\Dokumente\\GitHub\\Workshop---Making-Bad-Codes-Better\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\OneDrive\\Dokumente\\GitHub\\Workshop---Making-Bad-Codes-Better\\Tools - Examples\\0001 - demo of Query Store.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Tools - Examples\\0001 - demo of Query Store.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\OneDrive\\Dokumente\\GitHub\\Workshop---Making-Bad-Codes-Better\\Scenario 02\\02 - scenario 02 - maintenance procedure.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Scenario 02\\02 - scenario 02 - maintenance procedure.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,14 +27,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "0001 - demo of Query Store.sql - NB-LENOVO-I\\SQL_2022.ERP_Demo (NB-LENOVO-I\\uwe_r (57))",
-              "DocumentMoniker": "D:\\OneDrive\\Dokumente\\GitHub\\Workshop---Making-Bad-Codes-Better\\Tools - Examples\\0001 - demo of Query Store.sql",
-              "RelativeDocumentMoniker": "Tools - Examples\\0001 - demo of Query Store.sql",
-              "ToolTip": "D:\\OneDrive\\Dokumente\\GitHub\\Workshop---Making-Bad-Codes-Better\\Tools - Examples\\0001 - demo of Query Store.sql - NB-LENOVO-I\\SQL_2022.ERP_Demo (NB-LENOVO-I\\uwe_r (57))",
-              "RelativeToolTip": "Tools - Examples\\0001 - demo of Query Store.sql - NB-LENOVO-I\\SQL_2022.ERP_Demo (NB-LENOVO-I\\uwe_r (57))",
+              "Title": "02 - scenario 02 - maintenance procedure.sql - NB-LENOVO-I\\SQL_2022.master (NB-LENOVO-I\\uwe_r (51))",
+              "DocumentMoniker": "D:\\OneDrive\\Dokumente\\GitHub\\Workshop---Making-Bad-Codes-Better\\Scenario 02\\02 - scenario 02 - maintenance procedure.sql",
+              "RelativeDocumentMoniker": "Scenario 02\\02 - scenario 02 - maintenance procedure.sql",
+              "ToolTip": "D:\\OneDrive\\Dokumente\\GitHub\\Workshop---Making-Bad-Codes-Better\\Scenario 02\\02 - scenario 02 - maintenance procedure.sql - NB-LENOVO-I\\SQL_2022.master (NB-LENOVO-I\\uwe_r (51))",
+              "RelativeToolTip": "Scenario 02\\02 - scenario 02 - maintenance procedure.sql - NB-LENOVO-I\\SQL_2022.master (NB-LENOVO-I\\uwe_r (51))",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2024-12-23T10:09:51.833Z",
-              "EditorCaption": " - NB-LENOVO-I\\SQL_2022.ERP_Demo (NB-LENOVO-I\\uwe_r (57))"
+              "WhenOpened": "2024-12-25T07:31:25.384Z",
+              "EditorCaption": " - NB-LENOVO-I\\SQL_2022.master (NB-LENOVO-I\\uwe_r (51))"
             }
           ]
         }
