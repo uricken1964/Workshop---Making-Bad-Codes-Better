@@ -6,3 +6,4 @@
 *.wsuo
 *.sqlite
 DocumentLayout*.json
+VSWorkspace*.json

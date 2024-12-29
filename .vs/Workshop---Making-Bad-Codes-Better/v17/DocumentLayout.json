@@ -13,6 +13,14 @@
           "Children": [
             {
               "$type": "Bookmark",
+              "Name": "ST:1:0:{ed7d6f85-175b-4b57-9887-71fe8b865fc8}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{ed7d6f85-175b-4b57-9887-71fe8b865fc8}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
