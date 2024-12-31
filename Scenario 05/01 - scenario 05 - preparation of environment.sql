@@ -53,7 +53,7 @@ GO
 ALTER TABLE dbo.attestationcase
 ADD CONSTRAINT pk_attestationcase PRIMARY KEY CLUSTERED
 (uid_attestationcase)
-WITH (DATA_COMPRESSION = PAGE);
+WITH (SORT_IN_TEMPDB = ON, DATA_COMPRESSION = PAGE);
 GO
 
 /*
@@ -136,21 +136,21 @@ SET     uid_attestationrun = @newid
 FROM    dbo.attestationcase AS ac
 WHERE   uid_attestationrun = 'B'
 
-DECLARE @num_records INT = 500000;
-WHILE @num_records > 0
-BEGIN
-    SET @newid = CAST(NEWID() AS VARCHAR(38))
-    UPDATE  TOP (@num_records) ac
-    SET     uid_attestationrun = @newid
-    FROM    dbo.attestationcase AS ac
-    WHERE   uid_attestationrun = 'B'
+--DECLARE @num_records INT = 500000;
+--WHILE @num_records > 0
+--BEGIN
+--    SET @newid = CAST(NEWID() AS VARCHAR(38))
+--    UPDATE  TOP (@num_records) ac
+--    SET     uid_attestationrun = @newid
+--    FROM    dbo.attestationcase AS ac
+--    WHERE   uid_attestationrun = 'B'
 
-    SET @num_records = @num_records - (@num_records * 0.25);
+--    SET @num_records = @num_records - (@num_records * 0.25);
 
-    IF @num_records <= 0
-        BREAK;
-END
-GO
+--    IF @num_records <= 10
+--        BREAK;
+--END
+--GO
 
 SELECT COUNT_BIG(*)
 FROM    dbo.attestationcase;

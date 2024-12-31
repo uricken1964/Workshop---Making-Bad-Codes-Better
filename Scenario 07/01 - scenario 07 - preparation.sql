@@ -1,12 +1,17 @@
 /*
 	============================================================================
-	File:		08 - scenario 01 - clean the environment.sql
+	File:		01 - scenario 07 - preparation.sql
 
-	Summary:	This script removes all custom objects from the database which 
-				have been used for the demos!
+	Problemdescription:
 
+	The purchasing department needs a list of products sold and the manufacturer every morning.
+	This list is used to make calculations to determine the quantity that needs to be ordered
+	from each manufacturer for the next few days.
+
+	Summary:	This script prepares tables in the database ERP_Demo
+				
 				THIS SCRIPT IS PART OF THE WORKSHOP:
-					"Performance optimization by identifying and correcting bad SQL code"
+					"Workshop - Making Bad Codes better"
 
 	Date:		October 2024
 	Revion:		November 2024
@@ -27,14 +32,17 @@
 USE ERP_Demo;
 GO
 
-DROP PROCEDURE IF EXISTS dbo.get_customer_classification;
-DROP FUNCTION IF EXISTS dbo.calculate_customer_category;
+EXEC sp_create_indexes_orders;
 GO
 
-/* Remove all indexes */
-EXEC dbo.sp_drop_foreign_keys @table_name = N'ALL';
+EXEC sp_create_indexes_lineitems;
+GO
 
-EXEC dbo.sp_drop_indexes @table_name = N'dbo.orders',		@check_only = 0;
-EXEC dbo.sp_drop_indexes @table_name = N'dbo.customers',	@check_only = 0;
-EXEC dbo.sp_drop_indexes @table_name = N'dbo.nations',		@check_only = 0;
+EXEC sp_create_indexes_suppliers;
+GO
+
+EXEC sp_create_indexes_parts;
+GO
+
+EXEC sp_create_indexes_partsuppliers;
 GO

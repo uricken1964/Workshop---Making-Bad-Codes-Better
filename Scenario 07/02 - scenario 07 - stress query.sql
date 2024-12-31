@@ -1,13 +1,13 @@
 /*
 	============================================================================
-	File:		03 - scenario 01 - sp_stress_test.sql
+	File:		02 - scenario 01 - stress query.sql
 
 	Summary:	This script creates a stored procedure which should be run by
 				- ostress OR
 				- SQLQueryStress
 
-				The procedure will simulate a typical workload which should be
-				executed ~100.000 times by 50 simultanious processes
+				The procedure returns the total number of products and it's sales volume
+				for each supplier
 				
 				THIS SCRIPT IS PART OF THE WORKSHOP:
 					"Performance optimization by identifying and correcting bad SQL code"
@@ -31,26 +31,27 @@
 USE ERP_Demo;
 GO
 
-CREATE OR ALTER PROCEDURE dbo.sp_stress_test
-AS
-BEGIN
-	SET NOCOUNT ON;
-	SET XACT_ABORT ON;
+--CREATE NONCLUSTERED INDEX nix_lineitems_l_partkey 
+--ON dbo.lineitems (l_partkey)
+--WITH (SORT_IN_TEMPDB = ON, DATA_COMPRESSION = PAGE);
+--GO
 
-	DECLARE	@c_custkey	BIGINT = (RAND() * 1600000) + 1;
+DECLARE	@date_from	DATE	=	'2023-01-01';
+DECLARE	@date_to	DATE	=	'2023-01-31';
 
-	SELECT	c.c_custkey,
-			c.c_mktsegment,
-			c.c_nationkey,
-			c.c_name,
-			ccc.num_of_orders,
-			ccc.classification
-	FROM	dbo.customers AS c
-			CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019, 0) AS ccc
-	WHERE	c.c_custkey = @c_custkey;
-END
-GO
-
-/* Test */
-EXEC dbo.sp_stress_test;
-GO
+SELECT	l.*,
+		ps.*
+FROM	dbo.orders AS o
+		INNER JOIN dbo.lineitems AS l
+		ON (o.o_orderkey = l.l_orderkey)
+		CROSS APPLY
+		(
+			SELECT	ps_supplycost
+			FROM	dbo.partsuppliers AS ps
+			WHERE	ps.ps_suppkey = l.l_suppkey
+					AND ps.ps_partkey = l.l_partkey
+		) AS ps
+WHERE	o.o_orderdate BETWEEN @date_from AND @date_to
+ORDER BY
+		l.l_partkey
+OPTION	(RECOMPILE);

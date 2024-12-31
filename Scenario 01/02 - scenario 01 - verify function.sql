@@ -35,7 +35,7 @@ SELECT	c.c_custkey,
 		ccc.num_of_orders,
 		ccc.classification
 FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
+		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019, 0) AS ccc
 WHERE	c.c_custkey = 1483396;	/* A-customer */
 GO
 
@@ -46,7 +46,7 @@ SELECT	c.c_custkey,
 		ccc.num_of_orders,
 		ccc.classification
 FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
+		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019, 0) AS ccc
 WHERE	c.c_custkey = 746111;		/* B-customer */
 GO
 
@@ -57,7 +57,7 @@ SELECT	c.c_custkey,
 		ccc.num_of_orders,
 		ccc.classification
 FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
+		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019, 0) AS ccc
 WHERE	c.c_custkey = 149134;		/* C-customer */
 GO
 
@@ -68,7 +68,7 @@ SELECT	c.c_custkey,
 		ccc.num_of_orders,
 		ccc.classification
 FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
+		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019, 0) AS ccc
 WHERE	c.c_custkey = 696764;		/* D-customer */
 GO
 
@@ -79,6 +79,6 @@ SELECT	c.c_custkey,
 		ccc.num_of_orders,
 		ccc.classification
 FROM	dbo.customers AS c
-		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019) AS ccc
+		CROSS APPLY dbo.calculate_customer_category(c.c_custkey, 2019, 0) AS ccc
 WHERE	c.c_custkey = 10;		/* Z-customer */
 GO

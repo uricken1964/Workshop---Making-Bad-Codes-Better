@@ -51,11 +51,6 @@ RETURNS @t TABLE
 	classification	CHAR(1)	NOT NULL	DEFAULT ('Z')
 )
 BEGIN
-
-	/*
-		if the customer does not have any orders in the specific year
-		we return the value "Z"
-	*/
 	DECLARE	@num_of_orders				INT;
 	DECLARE	@previous_classification	CHAR(1);
 
