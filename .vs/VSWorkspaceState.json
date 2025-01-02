@@ -1,11 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Scenario 06",
-    "\\SQL Extended Events",
-    "\\SQL Query Stress",
-    "\\Windows Admin Center"
+    "\\Scenario 03",
+    "\\Scenario 04",
+    "\\Scenario 05",
+    "\\Scenario 07"
   ],
-  "SelectedNode": "\\SQL Extended Events\\XEvent - procedure recompiles.sql",
+  "SelectedNode": "\\Scenario 05",
   "PreviewInSolutionExplorer": false
 }
